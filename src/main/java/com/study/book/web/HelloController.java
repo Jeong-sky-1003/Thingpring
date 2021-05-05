@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 // web package : 컨트롤러와 관련된 클래스를 담음
+// @RestController : 컨트롤러를 JSON으로 반환하는 컨트롤러로 만들어줌 (data return이 주요 목적)
+// @RestController VS @Controller => Controller는 view return이 주요 목적
 @RestController
-@RequestMapping("/hello")
+@RequestMapping("/hello/**")
 public class HelloController {
 
     @GetMapping("/")
@@ -18,7 +20,7 @@ public class HelloController {
 
     // @RequestParam : 외부에서 API로 넘긴 파라미터를 가져오는 어노테이션입니다.
     // 단, param으로 넘겨지는 값은 String만 허용됩니다.
-    @GetMapping("/dto")
+    @GetMapping("dto")
     public HelloResponseDto helloDto(@RequestParam("name") String name,
                                      @RequestParam("amount") int amount) {
         return new HelloResponseDto(name, amount);
