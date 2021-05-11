@@ -1,5 +1,6 @@
 package com.study.book.web.domain.posts;
 
+import com.study.book.web.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import javax.persistence.*;
 @NoArgsConstructor  // 매개변수를 갖지 않는 생성자 생성
 @Entity             // 이를 선언함으로 반드시 기본키를 의미하는 어노테이션을 작성해야 함
                     // 테이블과 링크될 클래스임을 나타냄 snake_naming
-public class Posts {
+public class Posts extends BaseTimeEntity {
 
     @Id // 기본키
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 기본키 규칙을 나타내며, Auto Increment 적용

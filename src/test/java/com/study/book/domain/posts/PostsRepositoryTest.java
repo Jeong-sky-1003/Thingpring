@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 // assertThat 반드시 상속!
@@ -20,6 +21,40 @@ public class PostsRepositoryTest {
 
     @Autowired
     PostsRepository postsRepository;
+
+    /*
+        @After
+        - Junit 단위 테스트가 끝날 때마다 수행되는 메소드를 지정
+        - 배포 전 전체 테스트 수행 시, 테스트간 데이터 침범을 막기 위해 사용
+        - 여러 테스트 동시 수행시, 테스트용 DB인 H2에 데이터가 그대로 남아
+          다음 테스트 실행 시 테스트가 실패할 수 있어 선언
+     */
+    @After
+    public void cleanup(){
+        postsRepository.deleteAll();
+    }
+
+    @Test
+    public void BaseTimeEntity_등록() {
+
+        // given
+        LocalDateTime now = LocalDateTime.of(2021, 5, 7, 0, 0,0);
+        postsRepository.save(Posts.builder()
+                                .title("title")
+                                .content("content")
+                                .author("author")
+                                .build());
+
+        // when
+        List<Posts> postsList = postsRepository.findAll();
+
+        // then
+        Posts posts = postsList.get(0);
+
+        assertThat(posts.getCreatedDate()).isAfter(now);
+        assertThat(posts.getModifiedTime()).isAfter(now);
+
+    }
 
     // given-when-then 패턴
     @Test
@@ -44,18 +79,6 @@ public class PostsRepositoryTest {
         assertThat(post.getTitle()).isEqualTo(title);
         assertThat(post.getContent()).isEqualTo(content);
 
-    }
-
-    /*
-        @After
-        - Junit 단위 테스트가 끝날 때마다 수행되는 메소드를 지정
-        - 배포 전 전체 테스트 수행 시, 테스트간 데이터 침범을 막기 위해 사용
-        - 여러 테스트 동시 수행시, 테스트용 DB인 H2에 데이터가 그대로 남아
-          다음 테스트 실행 시 테스트가 실패할 수 있어 선언
-     */
-    @After
-    public void cleanup(){
-        postsRepository.deleteAll();
     }
 
 }
