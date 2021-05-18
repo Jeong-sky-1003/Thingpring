@@ -1,12 +1,10 @@
 package com.study.book.web;
 
 import com.study.book.web.dto.HelloResponseDto;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
 // web package : 컨트롤러와 관련된 클래스를 담음
 // @RestController : 컨트롤러를 JSON으로 반환하는 컨트롤러로 만들어줌 (data return이 주요 목적)

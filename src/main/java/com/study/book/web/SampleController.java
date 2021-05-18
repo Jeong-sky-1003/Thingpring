@@ -11,8 +11,11 @@ public class SampleController {
 
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("test", "test value");
+        model.addAttribute("test", "test value2222");
         return "sample";
     }
 
 }
+
+
+
