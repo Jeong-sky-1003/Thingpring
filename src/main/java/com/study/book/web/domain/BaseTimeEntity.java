@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
-    // Enntity들의 createdTime, modifiedDate를 자동으로 관리하는 역할
+    // Entity들의 createdTime, modifiedDate를 자동으로 관리하는 역할
 
     // Entity가 생성되어 저장될 때, 시간이 자동 저장됨
     @CreatedDate
