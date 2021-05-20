@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <div th:insert="~{layout/header :: sampleheader}"></div>
+</head>
+
+<body>
+
+    <div class="col-md-12">
+
+        <div class="col-md-4">
+
+            <form>
+
+                <div class="form-group">
+                    <label th:for="id">글 번호</label>
+                    <input type="text" class="form-control" th:id="id" th:value="${post.id}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label th:for="title"> 제목</label>
+                    <input type="text" class="form-control" th:id="title" th:value="${post.title}">
+                </div>
+
+                <div class="form-group">
+                    <label th:for="author"> 작성자</label>
+                    <input type="text" class="form-control" th:id="author" th:value="${post.author}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label th:for="content"> 내용</label>
+                    <textarea class="form-control" th:id="content" th:text="${post.title}">
+                    </textarea>
+                </div>
+
+            </form>
+
+            <a href="/" role="button" class="btn btn-secondary">취소</a>
+            <button type="button" class="btn btn-primary" th:id="btn-update">수정 완료</button>
+            <button type="button" class="btn btn-danger" th:id="btn-delete">삭제</button>
+
+        </div>
+
+    </div>
+
+    <div th:insert="~{layout/footer :: samplefooter}"></div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        /*]]>*/
+    </script>
+
+</body>
+</html>
