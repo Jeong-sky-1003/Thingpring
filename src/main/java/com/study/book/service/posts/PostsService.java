@@ -2,12 +2,16 @@ package com.study.book.service.posts;
 
 import com.study.book.web.domain.posts.Posts;
 import com.study.book.web.domain.posts.PostsRepository;
+import com.study.book.web.dto.PostsListResponseDto;
 import com.study.book.web.dto.PostsResponseDTO;
 import com.study.book.web.dto.PostsSaveRequestsDTO;
 import com.study.book.web.dto.PostsUpdateRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /*
     @RequiredArgsConstructor
@@ -19,6 +23,19 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostsService {
 
     private final PostsRepository postsRepository;
+
+    // readOnly=true : 트랜잭션 범위를 유지하되, 조회 기능만 남겨 조회 속도를 개선할 수 있음
+    @Transactional(readOnly = true)
+    public List<PostsListResponseDto> findAllDesc() {
+        // Steam map을 통해 PostsListResponseDto 로 변환함
+        /*
+            처음에 PostsListResponseDto 내에 지역 변수와 생성자를 정의하지 않았을 때 오류가 발생했으나
+            선언 후 오류를 해결할 수 있었음
+         */
+        return postsRepository.findAllDesc().stream()
+                                .map(PostsListResponseDto::new)
+                                .collect(Collectors.toList());
+    }
 
     public Long save(PostsSaveRequestsDTO requestsDTO) {
         return postsRepository.save(requestsDTO.toEntity()).getId();
@@ -51,6 +68,17 @@ public class PostsService {
 
         posts.update(requestDTO.getTitle(), requestDTO.getContent());
         return id;
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        /*
+            먼저 존재하는 Posts 확인 후 엔티 자체 삭제
+            이거 말고도 deleteById(id)로 삭제할 수 있음
+         */
+        Posts posts = postsRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + id));
+        postsRepository.delete(posts);
     }
 
 }

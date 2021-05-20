@@ -31,9 +31,15 @@ public class PostsApiController {
         - Spring 3.0부터 추가된 기능
         - URL 경로에 변수명을 넣어줌
      */
-    @PutMapping("{id}")
+    @PutMapping("posts/{id}")
     public Long update(@PathVariable Long id, @RequestBody PostsUpdateRequestDTO requestsDTO) {
         return postsService.update(id, requestsDTO);
+    }
+
+    @DeleteMapping("posts/{id}")
+    public Long delete(@PathVariable Long id) {
+        postsService.delete(id);
+        return id;
     }
 
 }
