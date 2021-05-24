@@ -17,8 +17,14 @@
 
                 <a th:href="@{/posts/save}" role="button" class="btn btn-primary">등록</a>
 
-                <a th:if="${userName == null}" href="/oauth2/authorization/google"
-                    class="btn btn-success active" role="button">Google Login</a>
+                <div th:if="${userName == null}" style="display: inline-block;">
+                    <a href="/oauth2/authorization/google"
+                       class="btn btn-success active" role="button">Google Login</a>
+
+                    <a href="/oauth2/authorization/naver"
+                       class="btn btn-secondary active" role="button">Naver Login</a>
+                </div>
+
                 <div th:unless="${userName == null}" style="display: inline-block;">
                     <span id="user" th:text="${'Logged in as: ' +userName}"></span>
                     <a href="/logout" class="btn btn-info active" role="button">Logout</a>

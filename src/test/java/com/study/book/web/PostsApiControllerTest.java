@@ -1,5 +1,9 @@
 package com.study.book.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.springframework.http.MediaType;
+
 import com.study.book.web.domain.posts.Posts;
 import com.study.book.web.domain.posts.PostsRepository;
 import com.study.book.web.dto.PostsSaveRequestsDTO;
@@ -15,11 +19,18 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
     @WebMvcTest를 사용하지 않는 이유?
@@ -39,6 +50,11 @@ public class PostsApiControllerTest {
     @LocalServerPort
     private int port;
 
+    @Autowired
+    private WebApplicationContext context;
+
+    private MockMvc mvc;
+
     /*
         RestTemplate
         - spring 3.0부터 지원
@@ -52,12 +68,21 @@ public class PostsApiControllerTest {
     @Autowired
     private PostsRepository postsRepository;
 
+    @Before
+    public void setup(){
+        mvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
     @After
     public void tearDown() throws Exception {
         postsRepository.deleteAll();
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void Posts_등록된다() throws Exception {
 
         // given
@@ -76,6 +101,10 @@ public class PostsApiControllerTest {
 
         // when
         ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestsDTO, Long.class);
+        mvc.perform(
+                post(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new ObjectMapper().writeValueAsString(requestsDTO))
+        ).andExpect(status().isOk());
 
         // then
         // 200번대 성공 여부
@@ -91,6 +120,7 @@ public class PostsApiControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "USER")
     public void Posts_수정된다() throws Exception {
 
         // given
@@ -123,6 +153,11 @@ public class PostsApiControllerTest {
         // when
         // exchange method : HTTP Method로 요청을 보내고 ResponseEntity로 반환 받음
         ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
+
+        mvc.perform(
+                put(url).contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(new ObjectMapper().writeValueAsString(requestDTO))
+        ).andExpect(status().isOk());
 
         // then
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
